@@ -125,7 +125,7 @@
                         this._selectorOpen = true;
                         this.open();
                         return;
-                    } else this.popupLogging(`Йой, не заповнено атрибут у ${buttonOpen.classList}`);
+                    } else this.popupLogging(`Не заполнен атрибут у ${buttonOpen.classList}`);
                     return;
                 }
                 const buttonClose = e.target.closest(`[${this.options.attributeCloseButton}]`);
@@ -210,8 +210,8 @@
                             popup: this
                         }
                     }));
-                    this.popupLogging(`Відкрив попап`);
-                } else this.popupLogging(`Йой, такого попапу немає. Перевірте коректність введення. `);
+                    this.popupLogging(`Открыл попап`);
+                } else this.popupLogging(`Такого попапа нету. Проверьте корректность введения.`);
             }
         }
         close(selectorValue) {
@@ -245,7 +245,7 @@
             setTimeout((() => {
                 this._focusTrap();
             }), 50);
-            this.popupLogging(`Закрив попап`);
+            this.popupLogging(`Закрыл попап`);
         }
         _getHash() {
             if (this.options.hashSettings.location) this.hash = this.targetOpen.selector.includes("#") ? this.targetOpen.selector : this.targetOpen.selector.replace(".", "#");
@@ -361,6 +361,7 @@
                 flagButton.addEventListener("click", (function() {
                     flagButton.classList.toggle("list__flag--passive");
                     flagButton.classList.toggle("list__flag--active");
+                    row.classList.toggle("list__item--flag");
                 }));
                 buttonsCell.appendChild(editButton);
                 buttonsCell.appendChild(saveButton);
@@ -489,8 +490,7 @@
             body: json
         }).then((response => response.json())).then((data => {
             console.log("Success:", data);
-            const popup = document.getElementById("popup");
-            popup.classList.remove("popup-show");
+            window.location.href = "index.html";
         })).catch((error => {
             console.error("Error:", error);
         }));

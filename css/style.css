@@ -521,10 +521,6 @@ body::after {
 .serch__input::placeholder {
   color: #0d0a18
 }
-.list {
-  border-radius: .625rem;
-  overflow: hidden
-}
 .list__header {
   display: grid;
   grid-template-columns: 10% 10% 10% 10% 10% 10% auto 7%;
@@ -532,16 +528,31 @@ body::after {
   padding: 1.25rem;
   font-weight: 600;
   color: #fff;
-  background: #495276
+  background: #495276;
+  position: sticky;
+  top: 0;
+  border-radius: .625rem .625rem 0 0
+}
+.list__table {
+  display: flex;
+  flex-direction: column;
+  gap: .3125rem
 }
 .list__item {
   display: grid;
   grid-template-columns: 10% 10% 10% 10% 10% 10% auto 7%;
   padding: 1.125rem 1.25rem;
-  gap: .625rem
+  gap: .625rem;
+  border-radius: .625rem
+}
+.list__item:first-child {
+  border-radius: 0 0 .625rem .625rem
 }
 .list__item:nth-child(odd) {
   background-color: #f5f5f5
+}
+.list__item--flag {
+  background-color: #fff2e7!important
 }
 .list__column {
   display: flex;
@@ -554,6 +565,7 @@ body::after {
 }
 .list__buttons {
   display: flex;
+  align-items: center;
   gap: 1.25rem;
   font-size: 1.125rem;
   flex-grow: 0;
