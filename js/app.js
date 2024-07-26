@@ -466,7 +466,8 @@
                         return response.json();
                     })).then((data => {
                         console.log("Updated successfully:", data);
-                        console.log("Updated JSON:", JSON.stringify(updatedJson, null, 2));
+                        console.log("Updated JSON:", JSON.stringify(updatedJson));
+                        console.log("Server JSON:", JSON.stringify(item));
                     })).catch((error => {
                         console.error("Error:", error);
                     }));
