@@ -319,6 +319,7 @@
             data.forEach((function(item) {
                 var row = document.createElement("div");
                 row.className = "list__item";
+                if (item.flag) row.classList.add("list__item--flag");
                 var headNumberCell = document.createElement("div");
                 headNumberCell.className = "list__value";
                 headNumberCell.setAttribute("data-id", "headNumber");
@@ -442,7 +443,7 @@
                             updatedData[cell.getAttribute("data-id")] = input.value;
                         }
                     }));
-                    fetch(`${urlServer}track_pairs/${item.trackPairId}`, {
+                    fetch(`${urlServer}track_pairs`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
