@@ -443,30 +443,26 @@
                             updatedData[cell.getAttribute("data-id")] = input.value;
                         }
                     }));
-                    const trackPairId = item.trackPairId;
-                    const updatedJson = {
-                        trackPairId,
-                        headNumber: updatedData.headNumber || item.headNumber,
-                        trailerNumber: updatedData.trailerNumber || item.trailerNumber,
-                        date: updatedData.date || item.date,
-                        fromCountry: updatedData.fromCountry || item.fromCountry,
-                        toCountry: updatedData.toCountry || item.toCountry,
-                        cargo: updatedData.cargo || item.cargo,
-                        comment: updatedData.comment || item.comment,
-                        flag: item.flag
-                    };
+                    item.trackPairId;
+                    item.headNumber = updatedData.headNumber || item.headNumber;
+                    item.trailerNumber = updatedData.trailerNumber || item.trailerNumber;
+                    item.date = updatedData.date || item.date;
+                    item.fromCountry = updatedData.fromCountry || item.fromCountry;
+                    item.toCountry = updatedData.toCountry || item.toCountry;
+                    item.cargo = updatedData.cargo || item.cargo;
+                    item.comment = updatedData.comment || item.comment;
                     fetch(`${urlServer}track_pairs`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify(updatedJson)
+                        body: JSON.stringify(item)
                     }).then((response => {
                         if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
                         return response.json();
                     })).then((data => {
                         console.log("Updated successfully:", data);
-                        console.log("Updated JSON:", JSON.stringify(updatedJson, null, 2));
+                        console.log("Updated JSON:", JSON.stringify(item, null, 2));
                     })).catch((error => {
                         console.error("Error:", error);
                     }));
