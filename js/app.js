@@ -458,6 +458,10 @@
                         return response.json();
                     })).then((data => {
                         console.log("Updated successfully:", data);
+                        console.log("Updated JSON:", JSON.stringify({
+                            trackPairId,
+                            ...updatedData
+                        }, null, 2));
                     })).catch((error => {
                         console.error("Error:", error);
                     }));
