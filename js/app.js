@@ -450,11 +450,11 @@
                     item.trackPairId;
                     item.headNumber = updatedData.headNumber || item.headNumber;
                     item.trailerNumber = updatedData.trailerNumber || item.trailerNumber;
-                    item.date = updatedData.date || item.date;
-                    item.fromCountry = updatedData.fromCountry || item.fromCountry;
-                    item.toCountry = updatedData.toCountry || item.toCountry;
-                    item.cargo = updatedData.cargo || item.cargo;
-                    item.comment = updatedData.comment || item.comment;
+                    item.date = updatedData.date || item.date || null;
+                    item.fromCountry = updatedData.fromCountry || item.fromCountry || null;
+                    item.toCountry = updatedData.toCountry || item.toCountry || null;
+                    item.cargo = updatedData.cargo || item.cargo || null;
+                    item.comment = updatedData.comment || item.comment || null;
                     fetch(`${urlServer}track_pairs`, {
                         method: "PUT",
                         headers: {
