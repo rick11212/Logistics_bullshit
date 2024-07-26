@@ -558,7 +558,9 @@ body::after {
   display: flex;
   align-items: center
 }
-.list__text input {
+.list__value input,
+.list__value select {
+  width: 100%;
   padding: .3125rem;
   border: 1px solid #0d0a18;
   border-radius: .3125rem
