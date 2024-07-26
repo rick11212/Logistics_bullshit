@@ -363,6 +363,8 @@
                     flagButton.classList.toggle("list__flag--passive");
                     flagButton.classList.toggle("list__flag--active");
                     row.classList.toggle("list__item--flag");
+                    item.flag = !item.flag;
+                    updateTrackPairFlag(item);
                 }));
                 buttonsCell.appendChild(editButton);
                 buttonsCell.appendChild(saveButton);
@@ -519,6 +521,22 @@
         }).then((response => {
             if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
             console.log("Successfully deleted");
+        })).catch((error => {
+            console.error("Error:", error);
+        }));
+    }
+    function updateTrackPairFlag(item) {
+        fetch(`${urlServer}track_pairs/${item.trackPairId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(item)
+        }).then((response => {
+            if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+            return response.json();
+        })).then((data => {
+            console.log("Flag updated successfully:", data);
         })).catch((error => {
             console.error("Error:", error);
         }));
