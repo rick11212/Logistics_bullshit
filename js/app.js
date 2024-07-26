@@ -293,9 +293,10 @@
             }));
         }
     }), 0);
+    const urlServer = "http://localhost:8080/api/";
     document.addEventListener("DOMContentLoaded", (function() {
         function fetchJsonData() {
-            fetch("http://localhost:8080/api/track_pairs").then((response => {
+            fetch(`${urlServer}track_pairs`).then((response => {
                 if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
                 return response.json();
             })).then((data => {
@@ -354,7 +355,7 @@
                 var delButton = document.createElement("button");
                 delButton.className = "list__del _icon-del";
                 delButton.addEventListener("click", (function() {
-                    list.removeChild(row);
+                    deleteTrackPair(item.trackPairId);
                 }));
                 var flagButton = document.createElement("button");
                 flagButton.className = "list__flag list__flag--passive";
@@ -401,11 +402,27 @@
                     }));
                 }));
                 saveButton.addEventListener("click", (function() {
+                    var updatedData = {};
                     row.querySelectorAll(".list__text").forEach((function(cell) {
                         if (cell.querySelector("input")) {
                             var input = cell.querySelector("input");
                             cell.textContent = input.value;
+                            updatedData[cell.getAttribute("data-id")] = input.value;
                         }
+                    }));
+                    fetch(`${urlServer}track_pairs/${item.trackPairId}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(updatedData)
+                    }).then((response => {
+                        if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+                        return response.json();
+                    })).then((data => {
+                        console.log("Updated successfully:", data);
+                    })).catch((error => {
+                        console.error("Error:", error);
                     }));
                     editButton.style.display = "";
                     saveButton.style.display = "none";
@@ -432,7 +449,7 @@
         }
         fetchJsonData();
         function jsonDataHeads() {
-            fetch("http://localhost:8080/api/cargo_heads").then((response => {
+            fetch(`${urlServer}cargo_heads`).then((response => {
                 if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
                 return response.json();
             })).then((data => {
@@ -454,7 +471,7 @@
         }
         jsonDataHeads();
         function jsonDataTrailers() {
-            fetch("http://localhost:8080/api/cargo_trailers").then((response => {
+            fetch(`${urlServer}cargo_trailers`).then((response => {
                 if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
                 return response.json();
             })).then((data => {
@@ -482,7 +499,7 @@
         const formData = new FormData(form);
         const json = JSON.stringify(Object.fromEntries(formData.entries()));
         console.log(json);
-        fetch("http://localhost:8080/api/track_pairs", {
+        fetch(`${urlServer}track_pairs`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -495,5 +512,16 @@
             console.error("Error:", error);
         }));
     }));
+    function deleteTrackPair(trackPairId) {
+        const url = `${urlServer}track_pairs/${trackPairId}`;
+        fetch(url, {
+            method: "DELETE"
+        }).then((response => {
+            if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+            console.log("Successfully deleted");
+        })).catch((error => {
+            console.error("Error:", error);
+        }));
+    }
     window["FLS"] = true;
 })();
