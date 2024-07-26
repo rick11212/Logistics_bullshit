@@ -444,24 +444,29 @@
                         }
                     }));
                     const trackPairId = item.trackPairId;
+                    const updatedJson = {
+                        trackPairId,
+                        headNumber: updatedData.headNumber || item.headNumber,
+                        trailerNumber: updatedData.trailerNumber || item.trailerNumber,
+                        date: updatedData.date || item.date,
+                        fromCountry: updatedData.fromCountry || item.fromCountry,
+                        toCountry: updatedData.toCountry || item.toCountry,
+                        cargo: updatedData.cargo || item.cargo,
+                        comment: updatedData.comment || item.comment,
+                        flag: item.flag
+                    };
                     fetch(`${urlServer}track_pairs`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({
-                            trackPairId,
-                            ...updatedData
-                        })
+                        body: JSON.stringify(updatedJson)
                     }).then((response => {
                         if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
                         return response.json();
                     })).then((data => {
                         console.log("Updated successfully:", data);
-                        console.log("Updated JSON:", JSON.stringify({
-                            trackPairId,
-                            ...updatedData
-                        }));
+                        console.log("Updated JSON:", JSON.stringify(updatedJson, null, 2));
                     })).catch((error => {
                         console.error("Error:", error);
                     }));
