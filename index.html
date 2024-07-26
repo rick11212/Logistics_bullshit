@@ -1,121 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-	<title>Logistics bullshit</title>
-	<meta charset="UTF-8">
-	<meta name="format-detection" content="telephone=no">
-	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20240726112147">
-	<link rel="shortcut icon" href="favicon.ico">
-	<!-- <meta name="robots" content="noindex, nofollow"> -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+	<head>
+		<title>Logistics bullshit</title>
+		<meta charset="UTF-8">
+		<meta name="format-detection" content="telephone=no">
+		<!-- <style>body{opacity: 0;}</style> -->
+		<link rel="stylesheet" href="css/style.min.css?_v=20240726112147">
+		<link rel="shortcut icon" href="favicon.ico">
+		<!-- <meta name="robots" content="noindex, nofollow"> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
 
-<body>
-	<div class="wrapper">
-		<header class="header">
-			<div class="header__container">
-				<div class="header__body">
-					<a href class="header__logo"><img src="img/logo.svg" alt>
-						<div class="header__text"><span>Лучшая</span> логистическая компания</div>
-					</a>
-					<div class="header__actions">
-						<button type="submit" class="header__button header__button--icon "> <span class="_icon-user"></span>Вход</button>
-						<span>/</span>
-						<button type="submit" class="header__button">Регистрация</button>
+	<body>
+		<div class="wrapper">
+			<header class="header">
+				<div class="header__container">
+					<div class="header__body">
+						<a href class="header__logo"><img src="img/logo.svg" alt>
+							<div class="header__text"><span>Лучшая</span> логистическая компания</div>
+						</a>
+						<div class="header__actions">
+							<button type="submit" class="header__button header__button--icon "> <span class="_icon-user"></span>Вход</button>
+							<span>/</span>
+							<button type="submit" class="header__button">Регистрация</button>
+						</div>
 					</div>
 				</div>
-			</div>
-		</header>
-		<main class="page">
-			<div class="page__container">
-				<div class="page__pairs pairs">
-					<h1 class="pairs__title">Существующие пары</h1>
-					<a class="pairs__button" href="#" data-popup="#popup">Добавить пару</a>
-				</div>
-				<div class="page__serch serch">
-					<h3 class="serch__title">Поиск</h3>
-					<div class="serch__actions">
-						<input id="searchHeadNumber" autocomplete="off" type="text" name="form[]" data-error="error" placeholder="Тягач" class="serch__input">
-						<input id="searchTrailerNumber" autocomplete="off" type="text" name="form[]" data-error="error" placeholder="Прицеп" class="serch__input">
-						<input id="searchDate" autocomplete="off" type="date" name="form[]" data-error="error" placeholder class="serch__input">
+			</header>
+			<main class="page">
+				<div class="page__container">
+					<div class="page__pairs pairs">
+						<h1 class="pairs__title">Существующие пары</h1>
+						<a class="pairs__button" href="#" data-popup="#popup">Добавить пару</a>
+					</div>
+					<div class="page__serch serch">
+						<h3 class="serch__title">Поиск</h3>
+						<div class="serch__actions">
+							<input id="searchHeadNumber" autocomplete="off" type="text" name="form[]" data-error="error" placeholder="Тягач" class="serch__input">
+							<input id="searchTrailerNumber" autocomplete="off" type="text" name="form[]" data-error="error" placeholder="Прицеп" class="serch__input">
+							<input id="searchDate" autocomplete="off" type="date" name="form[]" data-error="error" placeholder class="serch__input">
+						</div>
+					</div>
+					<div class="page__list list">
+						<div class="list__header ">
+							<div class="list__column">Тягач</div>
+							<div class="list__column">Прицеп</div>
+							<div class="list__column">Дата сцепки</div>
+							<div class="list__column">Откуда</div>
+							<div class="list__column">Куда</div>
+							<div class="list__column">Вид груза </div>
+							<div class="list__column">Комментарий</div>
+							<div class="list__column">Действие</div>
+						</div>
+						<div id="list" class="list__table">
+						</div>
 					</div>
 				</div>
-				<div class="page__list list">
-					<div class="list__header ">
-						<div class="list__column">Тягач</div>
-						<div class="list__column">Прицеп</div>
-						<div class="list__column">Дата сцепки</div>
-						<div class="list__column">Откуда</div>
-						<div class="list__column">Куда</div>
-						<div class="list__column">Вид груза </div>
-						<div class="list__column">Комментарий</div>
-						<div class="list__column">Действие</div>
-					</div>
-					<div id="list" class="list__table">
-					</div>
+			</main>
+			<footer class="footer">
+				<div class="footer__container">
 				</div>
-			</div>
-		</main>
-		<footer class="footer">
-			<div class="footer__container">
-			</div>
-		</footer>
-	</div>
-	<div id="popup" aria-hidden="true" class="popup">
-		<div class="popup__wrapper">
-			<div class="popup__content">
+			</footer>
+		</div>
+		<div id="popup" aria-hidden="true" class="popup">
+			<div class="popup__wrapper">
+				<div class="popup__content">
 
-				<h2 class="popup__title">Добавить пару</h2>
-				<div class="popup__actions">
-					<!-- https://jsonplaceholder.typicode.com/posts -->
-					<form id="form" class="page__form form" action="https://jsonplaceholder.typicode.com/posts" target="_blank" method="post">
-						<div class="form__content">
-							<div class="form__column">
-								<h2 class="form__title">Номер тягача <span></span></h2>
-								<select required class="form__select form__input" id="headNumber" name="headNumber" data-class-modif="form">
-								</select>
+					<h2 class="popup__title">Добавить пару</h2>
+					<div class="popup__actions">
+						<!-- https://jsonplaceholder.typicode.com/posts -->
+						<form id="form" class="page__form form" action="https://jsonplaceholder.typicode.com/posts" target="_blank" method="post">
+							<div class="form__content">
+								<div class="form__column">
+									<h2 class="form__title">Номер тягача <span></span></h2>
+									<select required class="form__select form__input" id="headNumber" name="headNumber" data-class-modif="form">
+									</select>
+								</div>
+								<div class="form__column">
+									<h2 class="form__title">Номер прицепа <span></span></h2>
+									<select required class="form__select form__input" id="trailerNumber" name="trailerNumber" data-class-modif="form">
+									</select>
+								</div>
+								<div class="form__column">
+									<h2 class="form__title">Дата сцепки</h2>
+									<input id="date" autocomplete="off" type="date" name="date" data-error="Error" placeholder class="form__input">
+								</div>
+								<div class="form__column">
+									<h2 class="form__title">Откуда</h2>
+									<input autocomplete="on" id="departureCountry" type="text" name="fromCountry" data-error="Error" placeholder class="form__input">
+								</div>
+								<div class="form__column">
+									<h2 class="form__title">Куда</h2>
+									<input autocomplete="on" id="toCountry" type="text" name="toCountry" data-error="Error" placeholder class="form__input">
+								</div>
+								<div class="form__column">
+									<h2 class="form__title">Вид груза</h2>
+									<input autocomplete="on" id="cargo" type="text" name="cargo" data-error="Error" placeholder class="form__input">
+								</div>
+								<div class="form__column">
+									<label class="form__title" for="comment">Комментарий</label>
+									<input id="comment" type="text" name="comment" data-error="Error" placeholder class="form__input">
+								</div>
 							</div>
-							<div class="form__column">
-								<h2 class="form__title">Номер прицепа <span></span></h2>
-								<select required class="form__select form__input" id="trailerNumber" name="trailerNumber" data-class-modif="form">
-								</select>
+							<div class="form__buttons">
+								<button data-close type="button" class="form__button form__button--gray">Отмена</button>
+								<button type="submit" class="form__button">Принять</button>
 							</div>
-							<div class="form__column">
-								<h2 class="form__title">Дата сцепки</h2>
-								<input id="date" autocomplete="off" type="date" name="date" data-error="Error" placeholder class="form__input">
-							</div>
-							<div class="form__column">
-								<h2 class="form__title">Откуда</h2>
-								<input autocomplete="on" id="departureCountry" type="text" name="fromCountry" data-error="Error" placeholder class="form__input">
-							</div>
-							<div class="form__column">
-								<h2 class="form__title">Куда</h2>
-								<input autocomplete="on" id="toCountry" type="text" name="toCountry" data-error="Error" placeholder class="form__input">
-							</div>
-							<div class="form__column">
-								<h2 class="form__title">Вид груза</h2>
-								<input autocomplete="on" id="cargo" type="text" name="cargo" data-error="Error" placeholder class="form__input">
-							</div>
-							<div class="form__column">
-								<label class="form__title" for="comment">Комментарий</label>
-								<input id="comment" type="text" name="comment" data-error="Error" placeholder class="form__input">
-							</div>
-						</div>
-						<div class="form__buttons">
-							<button data-close type="button" class="form__button form__button--gray">Отмена</button>
-							<button type="submit" class="form__button">Принять</button>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<!-- <script src="js/app.min.js?_v=20240726112147"></script> -->
-	<script src="js/app.js?_v=20240726112147"></script>
+		<!-- <script src="js/app.min.js?_v=20240726112147"></script> -->
+		<script src="js/app.js"></script>
 
-
-</body>
+	</body>
 
 </html>
