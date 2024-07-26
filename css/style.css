@@ -563,7 +563,8 @@ body::after {
   width: 100%;
   padding: .3125rem;
   border: 1px solid #0d0a18;
-  border-radius: .3125rem
+  border-radius: .3125rem;
+  background: #fff
 }
 .list__buttons {
   display: flex;
