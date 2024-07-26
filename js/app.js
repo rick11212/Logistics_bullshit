@@ -293,7 +293,7 @@
             }));
         }
     }), 0);
-    const urlServer = "hhttp:/192.168.5.79:8080/api/";
+    const urlServer = "http://192.168.5.79:8080/api/";
     document.addEventListener("DOMContentLoaded", (function() {
         function fetchJsonData() {
             fetch(`${urlServer}track_pairs`).then((response => {
@@ -443,12 +443,16 @@
                             updatedData[cell.getAttribute("data-id")] = input.value;
                         }
                     }));
+                    const trackPairId = item.trackPairId;
                     fetch(`${urlServer}track_pairs`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify(updatedData)
+                        body: JSON.stringify({
+                            trackPairId,
+                            ...updatedData
+                        })
                     }).then((response => {
                         if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
                         return response.json();
