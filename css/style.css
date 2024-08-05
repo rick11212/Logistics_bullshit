@@ -32,6 +32,12 @@
 ._icon-save:before {
   content: "\e962"
 }
+._icon-eye:before {
+  content: "\e9ce"
+}
+._icon-eye-blocked:before {
+  content: "\e9d1"
+}
 ._icon-exit:before {
   content: "\ea14"
 }
@@ -366,10 +372,7 @@ body::after {
   transition: transform .3s ease 0s;
   transition: transform .3s ease 0s,-webkit-transform .3s ease 0s;
   background-color: #fff;
-  padding: 60px 60px 35px 60px;
   width: 100%;
-  max-width: 1330px;
-  min-height: 200px;
   border-radius: 20px;
   display: flex;
   flex-direction: column
@@ -377,9 +380,24 @@ body::after {
 .lock .popup__content {
   visibility: visible
 }
+.popup__content--add-pair {
+  max-width: 1330px;
+  min-height: 200px;
+  padding: 60px 60px 35px 60px
+}
+.popup__content--login {
+  max-width: 375px;
+  min-height: 425px;
+  padding: 60px
+}
 .popup__close {
   justify-self: flex-start;
   margin: 0 0 0 auto
+}
+.popup__title {
+  font-size: 2.25rem;
+  font-weight: 500;
+  margin-bottom: 2.8125rem
 }
 .ibg {
   width: 100%;
@@ -584,11 +602,6 @@ body::after {
 .list__flag--active {
   background: url(../img/icons/flag-active.svg) 0 0 no-repeat
 }
-.popup__title {
-  font-size: 2.25rem;
-  font-weight: 500;
-  margin-bottom: 2.8125rem
-}
 .form__content {
   display: grid;
   grid-template-columns: 12% 12% 12% 12% 12% 12% auto;
@@ -622,10 +635,47 @@ body::after {
   padding: .625rem 1.875rem;
   background-color: #fcb040;
   flex: 0 1 8.125rem;
-  width: 8.125rem
+  width: 8.125rem;
+  height: 2.1875rem;
+  transition: all .3s
 }
-.form__button--gray {
-  background-color: #d4d4d4
+.form__button-close {
+  text-decoration: underline;
+  transition: all .3s
+}
+.form-login {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.25rem
+}
+.form-login__item {
+  display: flex;
+  flex-direction: column;
+  row-gap: .5rem;
+  position: relative
+}
+.form-login__item--margin {
+  margin-bottom: 1.25rem
+}
+.form-login__item--margin .form-login__input {
+  padding-right: 2.5rem
+}
+.form-login__icon {
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  color: #0d0a18;
+  cursor: pointer;
+  z-index: 5
+}
+.form-login__buttons {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5625rem
+}
+.form-login__button {
+  width: 100%;
+  flex: 0 0 2.1875rem
 }
 @media (any-hover:hover) {
   .select__option:hover {
@@ -634,5 +684,11 @@ body::after {
   .header__button:hover::after {
     opacity: 1;
     visibility: visible
+  }
+  .form__button:hover {
+    box-shadow: 5px 5px 5px #cecdcd
+  }
+  .form__button-close:hover {
+    text-shadow: 5px 5px 5px #a8a7a7
   }
 }

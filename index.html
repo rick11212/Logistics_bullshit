@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta name="format-detection" content="telephone=no">
 	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20240726150452">
+	<link rel="stylesheet" href="css/style.min.css?_v=20240805140829">
 	<link rel="shortcut icon" href="favicon.ico">
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,9 +21,9 @@
 						<div class="header__text"><span>Лучшая</span> логистическая компания</div>
 					</a>
 					<div class="header__actions">
-						<button type="submit" class="header__button header__button--icon "> <span class="_icon-user"></span>Вход</button>
-						<span>/</span>
-						<button type="submit" class="header__button">Регистрация</button>
+						<button type="submit" class="header__button header__button--icon" data-popup="#popup-login"> <span class="_icon-user"></span>Авторизация</button>
+						<!-- <span>/</span>
+				<button type="submit" class="header__button">Регистрация</button> -->
 					</div>
 				</div>
 			</div>
@@ -32,7 +32,7 @@
 			<div class="page__container">
 				<div class="page__pairs pairs">
 					<h1 class="pairs__title">Существующие пары</h1>
-					<a class="pairs__button" href="#" data-popup="#popup">Добавить пару</a>
+					<a class="pairs__button" href="#" data-popup="#popup-add-pair">Добавить пару</a>
 				</div>
 				<div class="page__serch serch">
 					<h3 class="serch__title">Поиск</h3>
@@ -63,14 +63,36 @@
 			</div>
 		</footer>
 	</div>
-	<div id="popup" aria-hidden="true" class="popup">
+	<div id="popup-login" aria-hidden="true" class="popup">
 		<div class="popup__wrapper">
-			<div class="popup__content">
+			<div class="popup__content popup__content--login">
+				<h2 class="popup__title">Авторизация</h2>
+				<form action="#" class="form-login" method="POST">
+					<div class="form-login__item">
+						<label class="form-login__label" for="userLogin">Логин</label>
+						<input required id="username" type="text" name="username" autocomplete="on" data-error="Error" class="form-login__input form__input">
+					</div>
+					<div class="form-login__item form-login__item--margin">
+						<label class="form-login__label" for="userPass">Пароль</label>
+						<input required id="password" type="password" name="password" autocomplete="on" data-error="Error" class="form-login__input form__input">
+						<span id="togglePassword" class="form-login__icon _icon-eye"></span>
+					</div>
+					<div class="form-login__buttons">
+						<button type="submit" class="form-login__button form__button">Войти</button>
+						<button data-close type="button" class="form-login__button-close form__button-close">Отмена</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="popup-add-pair" aria-hidden="true" class="popup">
+		<div class="popup__wrapper">
+			<div class="popup__content popup__content--add-pair">
 
 				<h2 class="popup__title">Добавить пару</h2>
 				<div class="popup__actions">
 					<!-- https://jsonplaceholder.typicode.com/posts -->
-					<form id="form" class="page__form form" action="https://jsonplaceholder.typicode.com/posts" target="_blank" method="post">
+					<form id="form" class="form" action="#" target="_blank" method="post">
 						<div class="form__content">
 							<div class="form__column">
 								<h2 class="form__title">Номер тягача <span></span></h2>
@@ -104,7 +126,7 @@
 							</div>
 						</div>
 						<div class="form__buttons">
-							<button data-close type="button" class="form__button form__button--gray">Отмена</button>
+							<button data-close type="button" class="form__button-close">Отмена</button>
 							<button type="submit" class="form__button">Принять</button>
 						</div>
 					</form>
@@ -112,8 +134,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- <script src="js/app.min.js?_v=20240726150452"></script> -->
-	<script src="js/app.js?_v=20240726150452"></script>
+	<!-- <script src="js/app.min.js?_v=20240805140829"></script> -->
+	<script src="js/app.js?_v=20240805140829"></script>
 
 
 </body>
