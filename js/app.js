@@ -295,6 +295,17 @@
     }), 0);
     const urlServer = "http://192.168.5.79:8080/api/";
     document.addEventListener("DOMContentLoaded", (function() {
+        fetch(`${urlServer}auth/status`).then((response => response.json())).then((data => {
+            if (data.isAuthenticated) {
+                document.querySelectorAll(".pairs__button, .pairs__buttons").forEach((element => {
+                    element.classList.remove("hidden");
+                }));
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("logout").classList.remove("hidden");
+            }
+        })).catch((error => console.error("Error:", error)));
+    }));
+    document.addEventListener("DOMContentLoaded", (function() {
         function fetchJsonData() {
             fetch(`${urlServer}track_pairs`).then((response => {
                 if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
@@ -357,6 +368,8 @@
                 row.appendChild(commentCell);
                 var buttonsCell = document.createElement("div");
                 buttonsCell.className = "list__buttons";
+                var pairsButton = document.querySelector(".pairs__button");
+                if (pairsButton && pairsButton.classList.contains("hidden")) buttonsCell.classList.add("hidden");
                 var editButton = document.createElement("button");
                 editButton.className = "list__edit _icon-edit";
                 var saveButton = document.createElement("button");
@@ -601,33 +614,6 @@
         const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
         passwordField.setAttribute("type", type);
         this.classList.toggle("_icon-eye-blocked");
-    }));
-    document.getElementById("form-login").addEventListener("submit", (function(event) {
-        event.preventDefault();
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        fetch(`${urlServer}login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username,
-                password
-            })
-        }).then((response => response.json())).then((data => {
-            console.log("Success:", data);
-            window.location.href = "index.html";
-        })).catch((error => {
-            console.error("Error:", error);
-        }));
-    }));
-    document.addEventListener("DOMContentLoaded", (function() {
-        fetch(`${urlServer}auth/status`).then((response => response.json())).then((data => {
-            if (!data.isAuthenticated) document.querySelectorAll(".pairs__button, .pairs__buttons, .list__buttons").forEach((element => {
-                element.classList.add("hidden");
-            }));
-        })).catch((error => console.error("Error:", error)));
     }));
     window["FLS"] = true;
 })();

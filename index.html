@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta name="format-detection" content="telephone=no">
 	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20241009123636">
+	<link rel="stylesheet" href="css/style.min.css?_v=20241009162359">
 	<link rel="shortcut icon" href="favicon.ico">
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +21,8 @@
 						<div class="header__text"><span>Лучшая</span> логистическая компания</div>
 					</a>
 					<div class="header__actions">
-						<button type="submit" class="header__button header__button--icon" data-popup="#popup-login"> <span class="_icon-user"></span>Авторизация</button>
+						<button id="login" type="submit" class="header__button header__button--icon" data-popup="#popup-login"> <span class="_icon-user"></span>Авторизация</button>
+						<button id="logout" type="submit" class="header__button header__button--icon hidden"> <span class="_icon-exit"></span>Выход</button>
 						<!-- <span>/</span>
 				<button type="submit" class="header__button">Регистрация</button> -->
 					</div>
@@ -32,8 +33,8 @@
 			<div class="page__container">
 				<div class="page__pairs pairs">
 					<h1 class="pairs__title">Существующие пары</h1>
-					<a class="pairs__button" href="#" data-popup="#popup-add-pair">Добавить пару</a>
-					<div class="pairs__buttons">
+					<a class="pairs__button hidden" href="#" data-popup="#popup-add-pair">Добавить пару</a>
+					<div class="pairs__buttons hidden">
 						<a class="pairs__button pairs__button--small" href="#" data-popup="#popup-head">Управление БД тягача</a>
 						<a class="pairs__button pairs__button--small" href="#" data-popup="#popup-trailer">Управление БД прицепа</a>
 					</div>
@@ -72,13 +73,13 @@
 		<div class="popup__wrapper">
 			<div class="popup__content popup__content--login">
 				<h2 class="popup__title">Авторизация</h2>
-				<form action="#" class="form-login" method="POST">
+				<form action="/login" class="form-login" method="POST">
 					<div class="form-login__item">
-						<label class="form-login__label" for="userLogin">Логин</label>
+						<label class="form-login__label" for="username">Логин</label>
 						<input required id="username" type="text" name="username" autocomplete="on" data-error="Error" class="form-login__input form__input">
 					</div>
 					<div class="form-login__item form-login__item--margin">
-						<label class="form-login__label" for="userPass">Пароль</label>
+						<label class="form-login__label" for="password">Пароль</label>
 						<input required id="password" type="password" name="password" autocomplete="on" data-error="Error" class="form-login__input form__input">
 						<span id="togglePassword" class="form-login__icon _icon-eye"></span>
 					</div>
@@ -93,7 +94,6 @@
 	<div id="popup-add-pair" aria-hidden="true" class="popup">
 		<div class="popup__wrapper">
 			<div class="popup__content popup__content--add-pair">
-
 				<h2 class="popup__title">Добавить пару</h2>
 				<div class="popup__actions">
 					<!-- https://jsonplaceholder.typicode.com/posts -->
@@ -169,8 +169,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- <script src="js/app.min.js?_v=20241009123636"></script> -->
-	<script src="js/app.js?_v=20241009123636"></script>
+	<!-- <script src="js/app.min.js?_v=20241009162359"></script> -->
+	<script src="js/app.js?_v=20241009162359"></script>
 
 
 </body>
