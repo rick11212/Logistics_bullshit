@@ -622,5 +622,12 @@
             console.error("Error:", error);
         }));
     }));
+    document.addEventListener("DOMContentLoaded", (function() {
+        fetch(`${urlServer}auth/status`).then((response => response.json())).then((data => {
+            if (!data.isAuthenticated) document.querySelectorAll(".pairs_button, .pairs_buttons, .list_buttons").forEach((element => {
+                element.classList.add("hidden");
+            }));
+        })).catch((error => console.error("Error:", error)));
+    }));
     window["FLS"] = true;
 })();
