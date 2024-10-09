@@ -390,6 +390,10 @@ body::after {
   min-height: 425px;
   padding: 60px
 }
+.popup__content--management {
+  max-width: 280px;
+  min-height: 200px
+}
 .popup__close {
   justify-self: flex-start;
   margin: 0 0 0 auto
@@ -502,13 +506,27 @@ body::after {
 }
 .pairs__button {
   border-radius: .3125rem;
+  padding: .625rem;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  width: 203px;
+  width: 253px;
   height: 44px;
   background-color: #fcb040
+}
+.pairs__button--small {
+  width: 123px;
+  font-size: .8125rem;
+  background-color: #495276;
+  text-align: center;
+  color: #fff
+}
+.pairs__buttons {
+  display: flex;
+  gap: .625rem;
+  justify-content: center;
+  align-items: center
 }
 .serch {
   display: flex;
@@ -676,6 +694,62 @@ body::after {
 .form-login__button {
   width: 100%;
   flex: 0 0 2.1875rem
+}
+.popup-management {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #f5f5f5
+}
+.popup-management__title {
+  background-color: #495276;
+  padding: 20px;
+  color: #fff;
+  font-weight: 600;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+.popup-management__title span {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer
+}
+.popup-management__title span::after,
+.popup-management__title span::before {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 2px;
+  background-color: #495276;
+  border-radius: 50px;
+  position: relative
+}
+.popup-management__title span::after {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  left: -6px
+}
+.popup-management__title span::before {
+  left: 6px
+}
+.popup-management__row {
+  display: flex;
+  justify-content: space-between;
+  gap: .625rem;
+  margin: 1.25rem;
+  padding-bottom: .625rem;
+  border-bottom: 1px solid rgba(0,0,0,.3)
+}
+.popup-management__buttons {
+  display: flex;
+  gap: 1.25rem
 }
 @media (any-hover:hover) {
   .select__option:hover {

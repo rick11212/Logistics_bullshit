@@ -606,7 +606,7 @@
         event.preventDefault();
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
-        fetch(`${urlServer}/login`, {
+        fetch(`${urlServer}login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta name="format-detection" content="telephone=no">
 	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20240805140829">
+	<link rel="stylesheet" href="css/style.min.css?_v=20241009103627">
 	<link rel="shortcut icon" href="favicon.ico">
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +33,11 @@
 				<div class="page__pairs pairs">
 					<h1 class="pairs__title">Существующие пары</h1>
 					<a class="pairs__button" href="#" data-popup="#popup-add-pair">Добавить пару</a>
+					<div class="pairs__buttons">
+						<a class="pairs__button pairs__button--small" href="#" data-popup="#popup-head">Управление БД тягача</a>
+						<a class="pairs__button pairs__button--small" href="#" data-popup="#popup-trailer">Управление БД прицепа</a>
+					</div>
+
 				</div>
 				<div class="page__serch serch">
 					<h3 class="serch__title">Поиск</h3>
@@ -134,8 +139,38 @@
 			</div>
 		</div>
 	</div>
-	<!-- <script src="js/app.min.js?_v=20240805140829"></script> -->
-	<script src="js/app.js?_v=20240805140829"></script>
+
+	<div id="popup-head" aria-hidden="true" class="popup">
+		<div class="popup__wrapper">
+			<div class="popup__content popup__content--management popup-management">
+				<div class="popup-management__title">Все тягачи <abbr title="Добавить тягач"><span id="addHeadNumber"></span></abbr></div>
+				<div class="popup-management__row">
+					<div class="popup-management__number">WR 65434</div>
+					<div class="popup-management__buttons">
+						<button class="popup-management__edit _icon-edit"></button>
+						<button class="popup-management__del _icon-del"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="popup-trailer" aria-hidden="true" class="popup">
+		<div class="popup__wrapper">
+			<div class="popup__content popup__content--management popup-management">
+				<div class="popup-management__title">Все прицепы <abbr title="Добавить прицеп"><span id="addTrailerNumber"></span></abbr></div>
+				<div class="popup-management__row">
+					<div class="popup-management__number">DSF 11</div>
+					<div class="popup-management__buttons">
+						<button class="popup-management__edit _icon-edit"></button>
+						<button class="popup-management__del _icon-del"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <script src="js/app.min.js?_v=20241009103627"></script> -->
+	<script src="js/app.js?_v=20241009103627"></script>
 
 
 </body>
