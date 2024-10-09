@@ -294,181 +294,104 @@
         }
     }), 0);
     const urlServer = "http://192.168.5.79:8080/api/";
-    document.addEventListener("DOMContentLoaded", (function() {
-        function fetchJsonData() {
-            fetch(`${urlServer}track_pairs`).then((response => {
-                if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
-                return response.json();
-            })).then((data => {
-                console.log("Success:", data);
-                processJsonData(data);
-            })).catch((error => {
-                console.error("Error:", error);
+    document.addEventListener("DOMContentLoaded", (() => {
+        fetch(`${urlServer}auth/status`).then((response => response.json())).then((data => {
+            if (!data.isAuthenticated) document.querySelectorAll(".pairs_button, .pairs_buttons, .list_buttons").forEach((element => {
+                element.classList.add("hidden");
             }));
-        }
-        function fetchOptions(url) {
-            return fetch(url).then((response => {
-                if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
-                return response.json();
-            })).catch((error => {
-                console.error("Error:", error);
-            }));
-        }
-        function processJsonData(data) {
-            var list = document.getElementById("list");
-            data.forEach((function(item) {
-                var row = document.createElement("div");
-                row.className = "list__item";
-                if (item.flag) row.classList.add("list__item--flag");
-                var headNumberCell = document.createElement("div");
-                headNumberCell.className = "list__value";
-                headNumberCell.setAttribute("data-id", "headNumber");
-                headNumberCell.textContent = item.headNumber;
-                row.appendChild(headNumberCell);
-                var trailerNumberCell = document.createElement("div");
-                trailerNumberCell.className = "list__value";
-                trailerNumberCell.setAttribute("data-id", "trailerNumber");
-                trailerNumberCell.textContent = item.trailerNumber;
-                row.appendChild(trailerNumberCell);
-                var dateCell = document.createElement("div");
-                dateCell.className = "list__value";
-                dateCell.setAttribute("data-id", "date");
-                dateCell.textContent = item.date ? item.date.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3.$2.$1") : "";
-                row.appendChild(dateCell);
-                var fromCountryCell = document.createElement("div");
-                fromCountryCell.className = "list__value";
-                fromCountryCell.setAttribute("data-id", "fromCountry");
-                fromCountryCell.textContent = item.fromCountry || "";
-                row.appendChild(fromCountryCell);
-                var toCountryCell = document.createElement("div");
-                toCountryCell.className = "list__value";
-                toCountryCell.setAttribute("data-id", "toCountry");
-                toCountryCell.textContent = item.toCountry || "";
-                row.appendChild(toCountryCell);
-                var cargoCell = document.createElement("div");
-                cargoCell.className = "list__value";
-                cargoCell.setAttribute("data-id", "cargo");
-                cargoCell.textContent = item.cargo || "";
-                row.appendChild(cargoCell);
-                var commentCell = document.createElement("div");
-                commentCell.className = "list__value";
-                commentCell.setAttribute("data-id", "comment");
-                commentCell.textContent = item.comment || "";
-                row.appendChild(commentCell);
-                var buttonsCell = document.createElement("div");
-                buttonsCell.className = "list__buttons";
-                var editButton = document.createElement("button");
-                editButton.className = "list__edit _icon-edit";
-                var saveButton = document.createElement("button");
-                saveButton.className = "list__save _icon-save";
-                saveButton.style.display = "none";
-                var exitButton = document.createElement("button");
-                exitButton.className = "list__exit _icon-exit";
-                exitButton.style.display = "none";
-                var delButton = document.createElement("button");
-                delButton.className = "list__del _icon-del";
-                delButton.addEventListener("click", (function() {
-                    deleteTrackPair(item.trackPairId);
-                }));
-                var flagButton = document.createElement("button");
-                flagButton.className = item.flag ? "list__flag list__flag--active" : "list__flag list__flag--passive";
-                flagButton.addEventListener("click", (function() {
-                    updateTrackPairFlag(item, flagButton, row);
-                }));
-                buttonsCell.appendChild(editButton);
-                buttonsCell.appendChild(saveButton);
-                buttonsCell.appendChild(exitButton);
-                buttonsCell.appendChild(delButton);
-                buttonsCell.appendChild(flagButton);
-                row.appendChild(buttonsCell);
-                list.appendChild(row);
-                editButton.addEventListener("click", (function() {
-                    editButton.style.display = "none";
-                    saveButton.style.display = "inline-block";
-                    exitButton.style.display = "inline-block";
-                    delButton.style.display = "none";
-                    flagButton.style.display = "none";
-                    Promise.all([ fetchOptions(`${urlServer}cargo_heads`), fetchOptions(`${urlServer}cargo_trailers`) ]).then((([headOptions, trailerOptions]) => {
-                        row.querySelectorAll(".list__value").forEach((function(cell) {
-                            if (!cell.querySelector("input") && !cell.querySelector("select")) {
-                                var input;
-                                if (cell.getAttribute("data-id") === "headNumber") {
-                                    input = document.createElement("select");
-                                    headOptions.forEach((function(optionValue) {
-                                        var option = document.createElement("option");
-                                        option.value = optionValue.headNumber;
-                                        option.textContent = optionValue.headNumber;
-                                        if (optionValue.headNumber === cell.textContent) option.selected = true;
-                                        input.appendChild(option);
-                                    }));
-                                } else if (cell.getAttribute("data-id") === "trailerNumber") {
-                                    input = document.createElement("select");
-                                    trailerOptions.forEach((function(optionValue) {
-                                        var option = document.createElement("option");
-                                        option.value = optionValue.trailerNumber;
-                                        option.textContent = optionValue.trailerNumber;
-                                        if (optionValue.trailerNumber === cell.textContent) option.selected = true;
-                                        input.appendChild(option);
-                                    }));
-                                } else {
-                                    input = document.createElement("input");
-                                    input.type = cell.getAttribute("data-id") === "date" ? "date" : "text";
-                                    if (cell.getAttribute("data-id") === "date") {
-                                        var dateParts = cell.textContent.split(".");
-                                        input.value = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
-                                    } else input.value = cell.textContent;
-                                }
-                                cell.setAttribute("data-original-value", cell.textContent);
-                                cell.textContent = "";
-                                cell.appendChild(input);
+        })).catch((error => console.error("Error:", error)));
+        fetchJsonData();
+    }));
+    const fetchJsonData = () => {
+        fetch(`${urlServer}track_pairs`).then((response => {
+            if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+            return response.json();
+        })).then((data => {
+            console.log("Success:", data);
+            processJsonData(data);
+        })).catch((error => console.error("Error:", error)));
+    };
+    const fetchOptions = url => fetch(url).then((response => {
+        if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+        return response.json();
+    })).catch((error => console.error("Error:", error)));
+    const processJsonData = data => {
+        const list = document.getElementById("list");
+        data.forEach((item => {
+            const row = document.createElement("div");
+            row.className = "list__item";
+            if (item.flag) row.classList.add("list__item--flag");
+            const createCell = (className, dataId, textContent) => {
+                const cell = document.createElement("div");
+                cell.className = className;
+                cell.setAttribute("data-id", dataId);
+                cell.textContent = textContent;
+                return cell;
+            };
+            row.appendChild(createCell("list__value", "headNumber", item.headNumber));
+            row.appendChild(createCell("list__value", "trailerNumber", item.trailerNumber));
+            row.appendChild(createCell("list__value", "date", item.date ? item.date.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3.$2.$1") : ""));
+            row.appendChild(createCell("list__value", "fromCountry", item.fromCountry || ""));
+            row.appendChild(createCell("list__value", "toCountry", item.toCountry || ""));
+            row.appendChild(createCell("list__value", "cargo", item.cargo || ""));
+            row.appendChild(createCell("list__value", "comment", item.comment || ""));
+            const buttonsCell = document.createElement("div");
+            buttonsCell.className = "list__buttons";
+            const createButton = (className, textContent, clickHandler) => {
+                const button = document.createElement("button");
+                button.className = className;
+                button.textContent = textContent;
+                button.addEventListener("click", clickHandler);
+                return button;
+            };
+            const editButton = createButton("list__edit _icon-edit", "Edit", (() => {
+                editButton.style.display = "none";
+                saveButton.style.display = "inline-block";
+                exitButton.style.display = "inline-block";
+                delButton.style.display = "none";
+                flagButton.style.display = "none";
+                Promise.all([ fetchOptions(`${urlServer}cargo_heads`), fetchOptions(`${urlServer}cargo_trailers`) ]).then((([headOptions, trailerOptions]) => {
+                    row.querySelectorAll(".list__value").forEach((cell => {
+                        if (!cell.querySelector("input") && !cell.querySelector("select")) {
+                            let input;
+                            if (cell.getAttribute("data-id") === "headNumber") {
+                                input = document.createElement("select");
+                                headOptions.forEach((optionValue => {
+                                    const option = document.createElement("option");
+                                    option.value = optionValue.headNumber;
+                                    option.textContent = optionValue.headNumber;
+                                    if (optionValue.headNumber === cell.textContent) option.selected = true;
+                                    input.appendChild(option);
+                                }));
+                            } else if (cell.getAttribute("data-id") === "trailerNumber") {
+                                input = document.createElement("select");
+                                trailerOptions.forEach((optionValue => {
+                                    const option = document.createElement("option");
+                                    option.value = optionValue.trailerNumber;
+                                    option.textContent = optionValue.trailerNumber;
+                                    if (optionValue.trailerNumber === cell.textContent) option.selected = true;
+                                    input.appendChild(option);
+                                }));
+                            } else {
+                                input = document.createElement("input");
+                                input.type = cell.getAttribute("data-id") === "date" ? "date" : "text";
+                                if (cell.getAttribute("data-id") === "date") {
+                                    const dateParts = cell.textContent.split(".");
+                                    input.value = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                                } else input.value = cell.textContent;
                             }
-                        }));
-                    }));
-                    exitButton.addEventListener("click", (function() {
-                        row.querySelectorAll(".list__value").forEach((function(cell) {
-                            if (cell.querySelector("input") || cell.querySelector("select")) {
-                                var originalValue = cell.getAttribute("data-original-value");
-                                cell.textContent = originalValue;
-                            }
-                        }));
-                        editButton.style.display = "";
-                        saveButton.style.display = "none";
-                        exitButton.style.display = "none";
-                        delButton.style.display = "";
-                        flagButton.style.display = "";
-                    }));
-                }));
-                saveButton.addEventListener("click", (function() {
-                    var updatedData = {};
-                    row.querySelectorAll(".list__value").forEach((function(cell) {
-                        if (cell.querySelector("input") || cell.querySelector("select")) {
-                            var input = cell.querySelector("input") || cell.querySelector("select");
-                            if (cell.getAttribute("data-id") === "date") cell.textContent = input.value.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3.$2.$1"); else cell.textContent = input.value;
-                            updatedData[cell.getAttribute("data-id")] = input.value;
+                            cell.setAttribute("data-original-value", cell.textContent);
+                            cell.textContent = "";
+                            cell.appendChild(input);
                         }
                     }));
-                    item.trackPairId;
-                    item.headNumber = updatedData.headNumber || item.headNumber;
-                    item.trailerNumber = updatedData.trailerNumber || item.trailerNumber;
-                    item.date = updatedData.date || item.date || null;
-                    item.fromCountry = updatedData.fromCountry || item.fromCountry || null;
-                    item.toCountry = updatedData.toCountry || item.toCountry || null;
-                    item.cargo = updatedData.cargo || item.cargo || null;
-                    item.comment = updatedData.comment || item.comment || null;
-                    fetch(`${urlServer}track_pairs`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(item)
-                    }).then((response => {
-                        if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
-                        return response.json();
-                    })).then((data => {
-                        console.log("Updated successfully:", data);
-                        console.log("Updated JSON:", JSON.stringify(item, null, 2));
-                    })).catch((error => {
-                        console.error("Error:", error);
+                }));
+                exitButton.addEventListener("click", (() => {
+                    row.querySelectorAll(".list__value").forEach((cell => {
+                        if (cell.querySelector("input") || cell.querySelector("select")) {
+                            const originalValue = cell.getAttribute("data-original-value");
+                            cell.textContent = originalValue;
+                        }
                     }));
                     editButton.style.display = "";
                     saveButton.style.display = "none";
@@ -477,69 +400,126 @@
                     flagButton.style.display = "";
                 }));
             }));
-            function filterRows() {
-                const headFilter = document.getElementById("searchHeadNumber").value.toLowerCase();
-                const trailerFilter = document.getElementById("searchTrailerNumber").value.toLowerCase();
-                const dateFilter = document.getElementById("searchDate").value;
-                const rows = document.querySelectorAll(".list__item");
-                rows.forEach((row => {
-                    const headNumber = row.querySelector("[data-id='headNumber']").textContent.toLowerCase();
-                    const trailerNumber = row.querySelector("[data-id='trailerNumber']").textContent.toLowerCase();
-                    const date = row.querySelector("[data-id='date']").textContent.replace(/(\d{2})\.(\d{2})\.(\d{4})/, "$3-$2-$1");
-                    if (headNumber.includes(headFilter) && trailerNumber.includes(trailerFilter) && date.includes(dateFilter)) row.style.display = ""; else row.style.display = "none";
+            const saveButton = createButton("list__save _icon-save", "Save", (() => {
+                const updatedData = {};
+                row.querySelectorAll(".list__value").forEach((cell => {
+                    if (cell.querySelector("input") || cell.querySelector("select")) {
+                        const input = cell.querySelector("input") || cell.querySelector("select");
+                        if (cell.getAttribute("data-id") === "date") cell.textContent = input.value.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3.$2.$1"); else cell.textContent = input.value;
+                        updatedData[cell.getAttribute("data-id")] = input.value;
+                    }
                 }));
-            }
-            document.getElementById("searchHeadNumber").addEventListener("input", filterRows);
-            document.getElementById("searchTrailerNumber").addEventListener("input", filterRows);
-            document.getElementById("searchDate").addEventListener("input", filterRows);
-        }
-        fetchJsonData();
-        function jsonDataHeads() {
-            fetch(`${urlServer}cargo_heads`).then((response => {
-                if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
-                return response.json();
-            })).then((data => {
-                console.log("Success:", data);
-                populateHeadNumbers(data);
-            })).catch((error => {
-                console.error("Error:", error);
+                item.trackPairId;
+                item.headNumber = updatedData.headNumber || item.headNumber;
+                item.trailerNumber = updatedData.trailerNumber || item.trailerNumber;
+                item.date = updatedData.date || item.date || null;
+                item.fromCountry = updatedData.fromCountry || item.fromCountry || null;
+                item.toCountry = updatedData.toCountry || item.toCountry || null;
+                item.cargo = updatedData.cargo || item.cargo || null;
+                item.comment = updatedData.comment || item.comment || null;
+                fetch(`${urlServer}track_pairs`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(item)
+                }).then((response => {
+                    if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+                    return response.json();
+                })).then((data => {
+                    console.log("Updated successfully:", data);
+                    console.log("Updated JSON:", JSON.stringify(item, null, 2));
+                })).catch((error => console.error("Error:", error)));
+                editButton.style.display = "";
+                saveButton.style.display = "none";
+                exitButton.style.display = "none";
+                delButton.style.display = "";
+                flagButton.style.display = "";
             }));
-        }
-        function populateHeadNumbers(data) {
-            var select = document.getElementById("headNumber");
-            data.forEach((function(item) {
-                var option = document.createElement("option");
-                option.value = item.headNumber;
-                option.textContent = item.headNumber;
-                option.classList.add("form__value");
-                select.appendChild(option);
+            const exitButton = createButton("list__exit _icon-exit", "Exit", (() => {
+                row.querySelectorAll(".list__value").forEach((cell => {
+                    if (cell.querySelector("input") || cell.querySelector("select")) {
+                        const originalValue = cell.getAttribute("data-original-value");
+                        cell.textContent = originalValue;
+                    }
+                }));
+                editButton.style.display = "";
+                saveButton.style.display = "none";
+                exitButton.style.display = "none";
+                delButton.style.display = "";
+                flagButton.style.display = "";
             }));
-        }
-        jsonDataHeads();
-        function jsonDataTrailers() {
-            fetch(`${urlServer}cargo_trailers`).then((response => {
-                if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
-                return response.json();
-            })).then((data => {
-                console.log("Success:", data);
-                populateTrailerNumbers(data);
-            })).catch((error => {
-                console.error("Error:", error);
+            const delButton = createButton("list__del _icon-del", "Delete", (() => {
+                deleteTrackPair(item.trackPairId);
             }));
-        }
-        function populateTrailerNumbers(data) {
-            var select = document.getElementById("trailerNumber");
-            data.forEach((function(item) {
-                var option = document.createElement("option");
-                option.value = item.trailerNumber;
-                option.textContent = item.trailerNumber;
-                option.classList.add("form__value");
-                select.appendChild(option);
+            const flagButton = createButton(item.flag ? "list__flag list__flag--active" : "list__flag list__flag--passive", "Flag", (() => {
+                updateTrackPairFlag(item, flagButton, row);
             }));
-        }
-        jsonDataTrailers();
-    }));
-    document.getElementById("form").addEventListener("submit", (function(event) {
+            buttonsCell.appendChild(editButton);
+            buttonsCell.appendChild(saveButton);
+            buttonsCell.appendChild(exitButton);
+            buttonsCell.appendChild(delButton);
+            buttonsCell.appendChild(flagButton);
+            row.appendChild(buttonsCell);
+            list.appendChild(row);
+        }));
+    };
+    const filterRows = () => {
+        const headFilter = document.getElementById("searchHeadNumber").value.toLowerCase();
+        const trailerFilter = document.getElementById("searchTrailerNumber").value.toLowerCase();
+        const dateFilter = document.getElementById("searchDate").value;
+        const rows = document.querySelectorAll(".list__item");
+        rows.forEach((row => {
+            const headNumber = row.querySelector("[data-id='headNumber']").textContent.toLowerCase();
+            const trailerNumber = row.querySelector("[data-id='trailerNumber']").textContent.toLowerCase();
+            const date = row.querySelector("[data-id='date']").textContent.replace(/(\d{2})\.(\d{2})\.(\d{4})/, "$3-$2-$1");
+            if (headNumber.includes(headFilter) && trailerNumber.includes(trailerFilter) && date.includes(dateFilter)) row.style.display = ""; else row.style.display = "none";
+        }));
+    };
+    document.getElementById("searchHeadNumber").addEventListener("input", filterRows);
+    document.getElementById("searchTrailerNumber").addEventListener("input", filterRows);
+    document.getElementById("searchDate").addEventListener("input", filterRows);
+    const jsonDataHeads = () => {
+        fetch(`${urlServer}cargo_heads`).then((response => {
+            if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+            return response.json();
+        })).then((data => {
+            console.log("Success:", data);
+            populateHeadNumbers(data);
+        })).catch((error => console.error("Error:", error)));
+    };
+    const populateHeadNumbers = data => {
+        const select = document.getElementById("headNumber");
+        data.forEach((item => {
+            const option = document.createElement("option");
+            option.value = item.headNumber;
+            option.textContent = item.headNumber;
+            option.classList.add("form__value");
+            select.appendChild(option);
+        }));
+    };
+    jsonDataHeads();
+    const jsonDataTrailers = () => {
+        fetch(`${urlServer}cargo_trailers`).then((response => {
+            if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+            return response.json();
+        })).then((data => {
+            console.log("Success:", data);
+            populateTrailerNumbers(data);
+        })).catch((error => console.error("Error:", error)));
+    };
+    const populateTrailerNumbers = data => {
+        const select = document.getElementById("trailerNumber");
+        data.forEach((item => {
+            const option = document.createElement("option");
+            option.value = item.trailerNumber;
+            option.textContent = item.trailerNumber;
+            option.classList.add("form__value");
+            select.appendChild(option);
+        }));
+    };
+    jsonDataTrailers();
+    document.getElementById("form").addEventListener("submit", (event => {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
@@ -554,11 +534,9 @@
         }).then((response => response.json())).then((data => {
             console.log("Success:", data);
             window.location.href = "index.html";
-        })).catch((error => {
-            console.error("Error:", error);
-        }));
+        })).catch((error => console.error("Error:", error)));
     }));
-    function deleteTrackPair(trackPairId) {
+    const deleteTrackPair = trackPairId => {
         const url = `${urlServer}track_pairs/${trackPairId}`;
         fetch(url, {
             method: "DELETE"
@@ -566,11 +544,9 @@
             if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
             console.log("Successfully deleted");
             window.location.reload();
-        })).catch((error => {
-            console.error("Error:", error);
-        }));
-    }
-    function updateTrackPairFlag(item, flagButton, row) {
+        })).catch((error => console.error("Error:", error)));
+    };
+    const updateTrackPairFlag = (item, flagButton, row) => {
         item.flag = !item.flag;
         fetch(`${urlServer}track_pairs`, {
             method: "PUT",
@@ -592,17 +568,15 @@
                 flagButton.classList.remove("list__flag--active");
                 row.classList.remove("list__item--flag");
             }
-        })).catch((error => {
-            console.error("Error:", error);
-        }));
-    }
+        })).catch((error => console.error("Error:", error)));
+    };
     document.getElementById("togglePassword").addEventListener("click", (function() {
         const passwordField = document.getElementById("password");
         const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
         passwordField.setAttribute("type", type);
         this.classList.toggle("_icon-eye-blocked");
     }));
-    document.getElementById("form-login").addEventListener("submit", (function(event) {
+    document.getElementById("form-login").addEventListener("submit", (event => {
         event.preventDefault();
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
@@ -618,15 +592,6 @@
         }).then((response => response.json())).then((data => {
             console.log("Success:", data);
             window.location.href = "index.html";
-        })).catch((error => {
-            console.error("Error:", error);
-        }));
-    }));
-    document.addEventListener("DOMContentLoaded", (function() {
-        fetch(`${urlServer}auth/status`).then((response => response.json())).then((data => {
-            if (!data.isAuthenticated) document.querySelectorAll(".pairs_button, .pairs_buttons, .list_buttons").forEach((element => {
-                element.classList.add("hidden");
-            }));
         })).catch((error => console.error("Error:", error)));
     }));
     window["FLS"] = true;
