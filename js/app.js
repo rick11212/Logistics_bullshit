@@ -308,7 +308,7 @@
     function addManagementRow(containerId, buttonId) {
         document.getElementById(buttonId).addEventListener("click", (function() {
             if (document.querySelector(".popup-management__input")) {
-                alert("Сначала завершите редактирование текущего инпута.");
+                alert("Сначала сохраните открытую строку редактирования.");
                 return;
             }
             var managementRows = document.getElementById(containerId);
