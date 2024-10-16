@@ -305,10 +305,116 @@
             }
         })).catch((error => console.error("Error:", error)));
     }));
-    function addManagementRow(containerId, buttonId) {
+    async function fetchData(endpoint) {
+        try {
+            const response = await fetch(`${urlServer}${endpoint}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Ошибка при получении данных:", error);
+        }
+    }
+    async function sendData(endpoint, data) {
+        try {
+            const response = await fetch(`${urlServer}${endpoint}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        } catch (error) {
+            console.error("Ошибка при отправке данных:", error);
+        }
+    }
+    async function deleteData(endpoint) {
+        try {
+            const response = await fetch(`${urlServer}${endpoint}`, {
+                method: "DELETE"
+            });
+            return response.json();
+        } catch (error) {
+            console.error("Ошибка при удалении данных:", error);
+        }
+    }
+    async function updateData(endpoint, data) {
+        try {
+            const response = await fetch(`${urlServer}${endpoint}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        } catch (error) {
+            console.error("Ошибка при обновлении данных:", error);
+        }
+    }
+    async function loadManagementRows(containerId, endpoint) {
+        const data = await fetchData(endpoint);
+        const managementRows = document.getElementById(containerId);
+        data.forEach((item => {
+            const managementRow = document.createElement("div");
+            managementRow.className = "popup-management__row";
+            managementRow.dataset.id = item.id;
+            const savedDiv = document.createElement("span");
+            savedDiv.className = "popup-management__number";
+            savedDiv.innerText = item.value;
+            const managementButtons = document.createElement("div");
+            managementButtons.className = "popup-management__buttons";
+            const iconEdit = document.createElement("button");
+            iconEdit.className = "popup-management__edit _icon-edit";
+            const iconDelete = document.createElement("button");
+            iconDelete.className = "popup-management__del _icon-del";
+            managementButtons.appendChild(iconEdit);
+            managementButtons.appendChild(iconDelete);
+            managementRow.appendChild(savedDiv);
+            managementRow.appendChild(managementButtons);
+            managementRows.appendChild(managementRow);
+            iconEdit.addEventListener("click", (function(event) {
+                event.stopPropagation();
+                const inputField = document.createElement("input");
+                inputField.type = "text";
+                inputField.className = "popup-management__number popup-management__input";
+                inputField.value = item.value;
+                managementRow.replaceChild(inputField, savedDiv);
+                managementButtons.replaceChild(iconSave, iconEdit);
+                managementButtons.removeChild(iconDelete);
+                inputField.focus();
+                iconSave.addEventListener("click", (async function(event) {
+                    event.stopPropagation();
+                    if (inputField.value.trim() === "") {
+                        alert("Пожалуйста, введите значение.");
+                        inputField.focus();
+                        return;
+                    }
+                    const savedValue = inputField.value;
+                    const savedDiv = document.createElement("span");
+                    savedDiv.className = "popup-management__number";
+                    savedDiv.innerText = savedValue;
+                    await updateData(`${endpoint}/${item.id}`, {
+                        value: savedValue
+                    });
+                    managementRow.replaceChild(savedDiv, inputField);
+                    managementButtons.replaceChild(iconEdit, iconSave);
+                    managementButtons.appendChild(iconDelete);
+                }));
+            }));
+            iconDelete.addEventListener("click", (async function(event) {
+                event.stopPropagation();
+                if (confirm("Вы уверены, что хотите удалить эту строку?")) {
+                    await deleteData(`${endpoint}/${item.id}`);
+                    managementRow.remove();
+                }
+            }));
+        }));
+    }
+    function addManagementRow(containerId, buttonId, endpoint) {
         document.getElementById(buttonId).addEventListener("click", (function() {
             if (document.querySelector(".popup-management__input")) {
-                alert("Сначала сохраните открытую строку редактирования.");
+                alert("Сначала завершите редактирование текущего инпута.");
                 return;
             }
             var managementRows = document.getElementById(containerId);
@@ -329,7 +435,7 @@
             managementRow.appendChild(managementButtons);
             managementRows.appendChild(managementRow);
             inputField.focus();
-            iconSave.addEventListener("click", (function(event) {
+            iconSave.addEventListener("click", (async function(event) {
                 event.stopPropagation();
                 if (inputField.value.trim() === "") {
                     alert("Пожалуйста, введите значение.");
@@ -345,6 +451,9 @@
                 managementRow.replaceChild(savedDiv, inputField);
                 managementButtons.replaceChild(iconEdit, iconSave);
                 managementButtons.appendChild(iconDelete);
+                await sendData(endpoint, {
+                    value: savedValue
+                });
                 iconEdit.addEventListener("click", (function(event) {
                     event.stopPropagation();
                     managementRow.replaceChild(inputField, savedDiv);
@@ -360,8 +469,10 @@
             }));
         }));
     }
-    addManagementRow("managementRowsHead", "addHeadNumber");
-    addManagementRow("managementRowsTrailer", "addTrailerNumber");
+    loadManagementRows("managementRows", "cargo_heads");
+    loadManagementRows("managementRowsTrailer", "cargo_trailers");
+    addManagementRow("managementRows", "addHeadNumber", "saveHeadNumber");
+    addManagementRow("managementRowsTrailer", "addTrailerNumber", "saveTrailerNumber");
     document.addEventListener("DOMContentLoaded", (function() {
         function fetchJsonData() {
             fetch(`${urlServer}track_pairs`).then((response => {
