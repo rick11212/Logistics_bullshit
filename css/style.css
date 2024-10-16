@@ -716,7 +716,7 @@ body::after {
   justify-content: space-between;
   align-items: center
 }
-.popup-management__title span {
+.popup-management__title button {
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -726,8 +726,8 @@ body::after {
   align-items: center;
   cursor: pointer
 }
-.popup-management__title span::after,
-.popup-management__title span::before {
+.popup-management__title button::after,
+.popup-management__title button::before {
   content: "";
   display: block;
   width: 12px;
@@ -736,25 +736,40 @@ body::after {
   border-radius: 50px;
   position: relative
 }
-.popup-management__title span::after {
+.popup-management__title button::after {
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
   left: -6px
 }
-.popup-management__title span::before {
+.popup-management__title button::before {
   left: 6px
+}
+.popup-management__rows {
+  overflow: auto;
+  max-height: 500px
 }
 .popup-management__row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: .625rem;
-  margin: 1.25rem;
+  margin-top: 1.25rem;
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
   padding-bottom: .625rem;
   border-bottom: 1px solid rgba(0,0,0,.3)
+}
+.popup-management__input {
+  padding: .3125rem;
+  width: 90%
 }
 .popup-management__buttons {
   display: flex;
   gap: 1.25rem
+}
+.popup-management__save {
+  cursor: pointer;
+  color: rgba(0,0,0,.8)
 }
 @media (any-hover:hover) {
   .select__option:hover {

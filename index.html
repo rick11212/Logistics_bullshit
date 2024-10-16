@@ -6,10 +6,13 @@
 	<meta charset="UTF-8">
 	<meta name="format-detection" content="telephone=no">
 	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20241009162359">
+	<link rel="stylesheet" href="css/style.min.css?_v=20241016111325">
 	<link rel="shortcut icon" href="favicon.ico">
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Подключаем SweetAlert2 -->
+	<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10?_v=20241016111325"></script> -->
+
 </head>
 
 <body>
@@ -22,7 +25,10 @@
 					</a>
 					<div class="header__actions">
 						<button id="login" type="submit" class="header__button header__button--icon" data-popup="#popup-login"> <span class="_icon-user"></span>Авторизация</button>
-						<button id="logout" type="submit" class="header__button header__button--icon hidden"> <span class="_icon-exit"></span>Выход</button>
+						<form action="/perform_logout" method="POST">
+							<button id="logout" type="submit" class="header__button header__button--icon hidden"> <span class="_icon-exit"></span>Выход</button>
+						</form>
+
 						<!-- <span>/</span>
 				<button type="submit" class="header__button">Регистрация</button> -->
 					</div>
@@ -73,7 +79,7 @@
 		<div class="popup__wrapper">
 			<div class="popup__content popup__content--login">
 				<h2 class="popup__title">Авторизация</h2>
-				<form action="/login" class="form-login" method="POST">
+				<form action="/perform_login" class="form-login" method="POST">
 					<div class="form-login__item">
 						<label class="form-login__label" for="username">Логин</label>
 						<input required id="username" type="text" name="username" autocomplete="on" data-error="Error" class="form-login__input form__input">
@@ -142,14 +148,9 @@
 
 	<div id="popup-head" aria-hidden="true" class="popup">
 		<div class="popup__wrapper">
-			<div class="popup__content popup__content--management popup-management">
-				<div class="popup-management__title">Все тягачи <abbr title="Добавить тягач"><span id="addHeadNumber"></span></abbr></div>
-				<div class="popup-management__row">
-					<div class="popup-management__number">WR 65434</div>
-					<div class="popup-management__buttons">
-						<button class="popup-management__edit _icon-edit"></button>
-						<button class="popup-management__del _icon-del"></button>
-					</div>
+			<div class="popup__content popup__content--management popup-management " id="popupManagement">
+				<div class="popup-management__title">Все тягачи <abbr title="Добавить тягач"><button id="addHeadNumber"></button></abbr></div>
+				<div class="popup-management__rows" id="managementRowsHead">
 				</div>
 			</div>
 		</div>
@@ -158,19 +159,14 @@
 	<div id="popup-trailer" aria-hidden="true" class="popup">
 		<div class="popup__wrapper">
 			<div class="popup__content popup__content--management popup-management">
-				<div class="popup-management__title">Все прицепы <abbr title="Добавить прицеп"><span id="addTrailerNumber"></span></abbr></div>
-				<div class="popup-management__row">
-					<div class="popup-management__number">DSF 11</div>
-					<div class="popup-management__buttons">
-						<button class="popup-management__edit _icon-edit"></button>
-						<button class="popup-management__del _icon-del"></button>
-					</div>
+				<div class="popup-management__title">Все прицепы <abbr title="Добавить прицеп"><button id="addTrailerNumber"></и></abbr></div>
+				<div class="popup-management__rows" id="managementRowsTrailer">
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- <script src="js/app.min.js?_v=20241009162359"></script> -->
-	<script src="js/app.js?_v=20241009162359"></script>
+	<!-- <script src="js/app.min.js?_v=20241016111325"></script> -->
+	<script src="js/app.js?_v=20241016111325"></script>
 
 
 </body>

@@ -305,6 +305,63 @@
             }
         })).catch((error => console.error("Error:", error)));
     }));
+    function addManagementRow(containerId, buttonId) {
+        document.getElementById(buttonId).addEventListener("click", (function() {
+            if (document.querySelector(".popup-management__input")) {
+                alert("Сначала завершите редактирование текущего инпута.");
+                return;
+            }
+            var managementRows = document.getElementById(containerId);
+            var managementRow = document.createElement("div");
+            managementRow.className = "popup-management__row";
+            var inputField = document.createElement("input");
+            inputField.type = "text";
+            inputField.className = "popup-management__number popup-management__input";
+            var managementButtons = document.createElement("div");
+            managementButtons.className = "popup-management__buttons";
+            var iconSave = document.createElement("button");
+            iconSave.className = "popup-management__save _icon-save";
+            var iconDelete = document.createElement("button");
+            iconDelete.className = "popup-management__del _icon-del";
+            managementRow.appendChild(inputField);
+            managementButtons.appendChild(iconSave);
+            managementButtons.appendChild(iconDelete);
+            managementRow.appendChild(managementButtons);
+            managementRows.appendChild(managementRow);
+            inputField.focus();
+            iconSave.addEventListener("click", (function(event) {
+                event.stopPropagation();
+                if (inputField.value.trim() === "") {
+                    alert("Пожалуйста, введите значение.");
+                    inputField.focus();
+                    return;
+                }
+                var savedValue = inputField.value;
+                var savedDiv = document.createElement("span");
+                savedDiv.className = "popup-management__number";
+                savedDiv.innerText = savedValue;
+                var iconEdit = document.createElement("button");
+                iconEdit.className = "popup-management__edit _icon-edit";
+                managementRow.replaceChild(savedDiv, inputField);
+                managementButtons.replaceChild(iconEdit, iconSave);
+                managementButtons.appendChild(iconDelete);
+                iconEdit.addEventListener("click", (function(event) {
+                    event.stopPropagation();
+                    managementRow.replaceChild(inputField, savedDiv);
+                    managementButtons.replaceChild(iconSave, iconEdit);
+                    managementButtons.removeChild(iconDelete);
+                    inputField.value = savedValue;
+                    inputField.focus();
+                }));
+            }));
+            iconDelete.addEventListener("click", (function(event) {
+                event.stopPropagation();
+                if (confirm("Вы уверены, что хотите удалить эту строку?")) managementRow.remove();
+            }));
+        }));
+    }
+    addManagementRow("managementRowsHead", "addHeadNumber");
+    addManagementRow("managementRowsTrailer", "addTrailerNumber");
     document.addEventListener("DOMContentLoaded", (function() {
         function fetchJsonData() {
             fetch(`${urlServer}track_pairs`).then((response => {
