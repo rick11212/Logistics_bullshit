@@ -297,7 +297,7 @@
     document.addEventListener("DOMContentLoaded", (function() {
         fetch(`${urlServer}auth/status`).then((response => response.json())).then((data => {
             if (data.isAuthenticated) {
-                document.querySelectorAll(".pairs__button, .pairs__buttons").forEach((element => {
+                document.querySelectorAll(".pairs__button, .pairs__buttons, list__column--action").forEach((element => {
                     element.classList.remove("hidden");
                 }));
                 document.getElementById("login").classList.add("hidden");
@@ -305,113 +305,100 @@
             }
         })).catch((error => console.error("Error:", error)));
     }));
-    async function fetchData(endpoint) {
-        try {
-            const response = await fetch(`${urlServer}${endpoint}`);
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error("Ошибка при получении данных:", error);
-        }
-    }
-    async function sendData(endpoint, data) {
-        try {
-            const response = await fetch(`${urlServer}${endpoint}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            });
+    function fetchAndDisplayData(endpoint, containerId) {
+        fetch(`${urlServer}${endpoint}`).then((response => {
+            if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
             return response.json();
-        } catch (error) {
-            console.error("Ошибка при отправке данных:", error);
-        }
-    }
-    async function deleteData(endpoint) {
-        try {
-            const response = await fetch(`${urlServer}${endpoint}`, {
-                method: "DELETE"
-            });
-            return response.json();
-        } catch (error) {
-            console.error("Ошибка при удалении данных:", error);
-        }
-    }
-    async function updateData(endpoint, data) {
-        try {
-            const response = await fetch(`${urlServer}${endpoint}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            });
-            return response.json();
-        } catch (error) {
-            console.error("Ошибка при обновлении данных:", error);
-        }
-    }
-    async function loadManagementRows(containerId, endpoint) {
-        const data = await fetchData(endpoint);
-        const managementRows = document.getElementById(containerId);
-        data.forEach((item => {
-            const managementRow = document.createElement("div");
-            managementRow.className = "popup-management__row";
-            managementRow.dataset.id = item.id;
-            const savedDiv = document.createElement("span");
-            savedDiv.className = "popup-management__number";
-            savedDiv.innerText = item.value;
-            const managementButtons = document.createElement("div");
-            managementButtons.className = "popup-management__buttons";
-            const iconEdit = document.createElement("button");
-            iconEdit.className = "popup-management__edit _icon-edit";
-            const iconDelete = document.createElement("button");
-            iconDelete.className = "popup-management__del _icon-del";
-            managementButtons.appendChild(iconEdit);
-            managementButtons.appendChild(iconDelete);
-            managementRow.appendChild(savedDiv);
-            managementRow.appendChild(managementButtons);
-            managementRows.appendChild(managementRow);
-            iconEdit.addEventListener("click", (function(event) {
-                event.stopPropagation();
-                const inputField = document.createElement("input");
-                inputField.type = "text";
-                inputField.className = "popup-management__number popup-management__input";
-                inputField.value = item.value;
-                managementRow.replaceChild(inputField, savedDiv);
-                managementButtons.replaceChild(iconSave, iconEdit);
-                managementButtons.removeChild(iconDelete);
-                inputField.focus();
-                iconSave.addEventListener("click", (async function(event) {
+        })).then((data => {
+            var container = document.getElementById(containerId);
+            container.innerHTML = "";
+            data.forEach((item => {
+                var managementRow = document.createElement("div");
+                managementRow.className = "popup-management__row";
+                var savedDiv = document.createElement("span");
+                savedDiv.className = "popup-management__number";
+                savedDiv.innerText = item.headNumber || item.trailerNumber;
+                savedDiv.setAttribute("data-id", item.cargoHeadId || item.cargoTrailerId);
+                var managementButtons = document.createElement("div");
+                managementButtons.className = "popup-management__buttons";
+                var iconEdit = document.createElement("button");
+                iconEdit.className = "popup-management__edit _icon-edit";
+                var iconDelete = document.createElement("button");
+                iconDelete.className = "popup-management__del _icon-del";
+                managementRow.appendChild(savedDiv);
+                managementButtons.appendChild(iconEdit);
+                managementButtons.appendChild(iconDelete);
+                managementRow.appendChild(managementButtons);
+                container.appendChild(managementRow);
+                iconEdit.addEventListener("click", (function(event) {
                     event.stopPropagation();
-                    if (inputField.value.trim() === "") {
-                        alert("Пожалуйста, введите значение.");
-                        inputField.focus();
-                        return;
-                    }
-                    const savedValue = inputField.value;
-                    const savedDiv = document.createElement("span");
-                    savedDiv.className = "popup-management__number";
-                    savedDiv.innerText = savedValue;
-                    await updateData(`${endpoint}/${item.id}`, {
-                        value: savedValue
-                    });
-                    managementRow.replaceChild(savedDiv, inputField);
-                    managementButtons.replaceChild(iconEdit, iconSave);
-                    managementButtons.appendChild(iconDelete);
+                    var inputField = document.createElement("input");
+                    inputField.type = "text";
+                    inputField.className = "popup-management__number popup-management__input";
+                    inputField.value = savedDiv.innerText;
+                    var iconSave = document.createElement("button");
+                    iconSave.className = "popup-management__save _icon-save";
+                    managementRow.replaceChild(inputField, savedDiv);
+                    managementButtons.replaceChild(iconSave, iconEdit);
+                    managementButtons.removeChild(iconDelete);
+                    inputField.focus();
+                    iconSave.addEventListener("click", (function(event) {
+                        event.stopPropagation();
+                        if (inputField.value.trim() === "") {
+                            alert("Пожалуйста, введите значение.");
+                            inputField.focus();
+                            return;
+                        }
+                        var updatedValue = inputField.value;
+                        savedDiv.innerText = updatedValue;
+                        var id = savedDiv.getAttribute("data-id");
+                        var updateData = {};
+                        if (endpoint === "cargo_heads") updateData = {
+                            cargoHeadId: id,
+                            headNumber: updatedValue
+                        }; else if (endpoint === "cargo_trailers") updateData = {
+                            cargoTrailerId: id,
+                            trailerNumber: updatedValue
+                        };
+                        fetch(`${urlServer}${endpoint}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(updateData)
+                        }).then((response => {
+                            if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+                            return response.json();
+                        })).then((data => {
+                            console.log("Update Success:", data);
+                        })).catch((error => {
+                            console.error("Update Error:", error);
+                        }));
+                        managementRow.replaceChild(savedDiv, inputField);
+                        managementButtons.replaceChild(iconEdit, iconSave);
+                        managementButtons.appendChild(iconDelete);
+                    }));
+                }));
+                iconDelete.addEventListener("click", (function(event) {
+                    event.stopPropagation();
+                    if (confirm("Вы уверены, что хотите удалить эту строку?")) fetch(`${urlServer}${endpoint}/${item.cargoHeadId || item.cargoTrailerId}`, {
+                        method: "DELETE"
+                    }).then((response => {
+                        if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+                        console.log("Delete Success");
+                        managementRow.remove();
+                    })).catch((error => {
+                        console.error("Delete Error:", error);
+                    }));
                 }));
             }));
-            iconDelete.addEventListener("click", (async function(event) {
-                event.stopPropagation();
-                if (confirm("Вы уверены, что хотите удалить эту строку?")) {
-                    await deleteData(`${endpoint}/${item.id}`);
-                    managementRow.remove();
-                }
-            }));
+        })).catch((error => {
+            console.error("Fetch Error:", error);
         }));
     }
-    function addManagementRow(containerId, buttonId, endpoint) {
+    fetchAndDisplayData("cargo_heads", "managementRowsHead");
+    fetchAndDisplayData("cargo_trailers", "managementRowsTrailer");
+    function addManagementRow(containerId, buttonId) {
         document.getElementById(buttonId).addEventListener("click", (function() {
             if (document.querySelector(".popup-management__input")) {
                 alert("Сначала завершите редактирование текущего инпута.");
@@ -435,7 +422,7 @@
             managementRow.appendChild(managementButtons);
             managementRows.appendChild(managementRow);
             inputField.focus();
-            iconSave.addEventListener("click", (async function(event) {
+            iconSave.addEventListener("click", (function(event) {
                 event.stopPropagation();
                 if (inputField.value.trim() === "") {
                     alert("Пожалуйста, введите значение.");
@@ -451,9 +438,26 @@
                 managementRow.replaceChild(savedDiv, inputField);
                 managementButtons.replaceChild(iconEdit, iconSave);
                 managementButtons.appendChild(iconDelete);
-                await sendData(endpoint, {
-                    value: savedValue
-                });
+                var endpoint;
+                if (containerId === "managementRowsHead") endpoint = "cargo_heads"; else if (containerId === "managementRowsTrailer") endpoint = "cargo_trailers";
+                fetch(`${urlServer}${endpoint}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        headNumber: endpoint === "cargo_heads" ? savedValue : null,
+                        trailerNumber: endpoint === "cargo_trailers" ? savedValue : null
+                    })
+                }).then((response => {
+                    if (!response.ok) throw new Error("Network response was not ok " + response.statusText);
+                    return response.json();
+                })).then((data => {
+                    console.log("Add Success:", data);
+                    savedDiv.setAttribute("data-id", data.cargoHeadId || data.cargoTrailerId);
+                })).catch((error => {
+                    console.error("Add Error:", error);
+                }));
                 iconEdit.addEventListener("click", (function(event) {
                     event.stopPropagation();
                     managementRow.replaceChild(inputField, savedDiv);
@@ -469,10 +473,14 @@
             }));
         }));
     }
-    loadManagementRows("managementRows", "cargo_heads");
-    loadManagementRows("managementRowsTrailer", "cargo_trailers");
-    addManagementRow("managementRows", "addHeadNumber", "saveHeadNumber");
-    addManagementRow("managementRowsTrailer", "addTrailerNumber", "saveTrailerNumber");
+    addManagementRow("managementRowsHead", "addHeadNumber");
+    addManagementRow("managementRowsTrailer", "addTrailerNumber");
+    document.getElementById("popup-head").addEventListener("hide", (function() {
+        location.reload();
+    }));
+    document.getElementById("popup-trailer").addEventListener("hide", (function() {
+        location.reload();
+    }));
     document.addEventListener("DOMContentLoaded", (function() {
         function fetchJsonData() {
             fetch(`${urlServer}track_pairs`).then((response => {
@@ -537,7 +545,11 @@
                 var buttonsCell = document.createElement("div");
                 buttonsCell.className = "list__buttons";
                 var pairsButton = document.querySelector(".pairs__button");
-                if (pairsButton && pairsButton.classList.contains("hidden")) buttonsCell.classList.add("hidden");
+                var spanAction = document.querySelector(".list__column--action");
+                if (pairsButton && pairsButton.classList.contains("hidden")) {
+                    buttonsCell.classList.add("hidden");
+                    spanAction.classList.add("hidden");
+                }
                 var editButton = document.createElement("button");
                 editButton.className = "list__edit _icon-edit";
                 var saveButton = document.createElement("button");
@@ -802,6 +814,9 @@
         })).catch((error => {
             console.error("Error:", error);
         }));
+    }));
+    window.addEventListener("hashchange", (function() {
+        if (!location.hash.includes("#popup-head") && !location.hash.includes("#popup-trailer")) location.reload();
     }));
     window["FLS"] = true;
 })();
