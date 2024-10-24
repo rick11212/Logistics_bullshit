@@ -297,7 +297,7 @@
     document.addEventListener("DOMContentLoaded", (function() {
         fetch(`${urlServer}auth/status`).then((response => response.json())).then((data => {
             if (data.isAuthenticated) {
-                document.querySelectorAll(".pairs__button, .pairs__buttons, list__column--action").forEach((element => {
+                document.querySelectorAll(".pairs__button, .pairs__buttons, .list__column--action").forEach((element => {
                     element.classList.remove("hidden");
                 }));
                 document.getElementById("login").classList.add("hidden");
@@ -545,11 +545,7 @@
                 var buttonsCell = document.createElement("div");
                 buttonsCell.className = "list__buttons";
                 var pairsButton = document.querySelector(".pairs__button");
-                var spanAction = document.querySelector(".list__column--action");
-                if (pairsButton && pairsButton.classList.contains("hidden")) {
-                    buttonsCell.classList.add("hidden");
-                    spanAction.classList.add("hidden");
-                }
+                if (pairsButton && pairsButton.classList.contains("hidden")) buttonsCell.classList.add("hidden");
                 var editButton = document.createElement("button");
                 editButton.className = "list__edit _icon-edit";
                 var saveButton = document.createElement("button");
